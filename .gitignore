@@ -15,3 +15,4 @@
 !rel/*/overlay
 !rel/*/reltool.config
 rel/*/*
+deps/*
