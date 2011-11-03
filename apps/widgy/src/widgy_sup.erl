@@ -24,5 +24,10 @@ start_link() ->
 %% ===================================================================
 
 init([]) ->
-    {ok, { {one_for_one, 5, 10}, []} }.
+    {ok, Port} = application:get_env(widgy, websockets_port),
+    WidgyWebsocketsServer = {widgy_websockets_server,
+                             {widgy_websockets_server, start_link, [Port]},
+                             permanent, 5000, worker, [widgy_websockets_server]},
+
+    {ok, { {one_for_one, 5, 10}, [WidgyWebsocketsServer]} }.
 
