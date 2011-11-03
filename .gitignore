@@ -1,0 +1,17 @@
+*.beam
+*.app
+*.log*
+*.dump
+*.pipe*
+*.o
+*.so
+*.bin
+*#
+*~
+.#*
+*#
+.eunit
+!rel/files
+!rel/*/overlay
+!rel/*/reltool.config
+rel/*/*

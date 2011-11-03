@@ -1,0 +1,12 @@
+{application, widgy,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { widgy_app, []}},
+  {env, []}
+ ]}.
