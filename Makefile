@@ -13,4 +13,7 @@ console:
 quick-console:
 	erl -config rel/files/sys.config -pa  apps/*/ebin -pa vendor/*/ebin -pa -boot start_sasl -eval "reloader:start(),application:start(widgy)"
 
+start_nginx:
+	nginx -p . -c ./nginx.conf
+
 all: compile clean_generate generate
