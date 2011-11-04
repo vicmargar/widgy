@@ -1,0 +1,9 @@
+./rebar get-deps
+make all
+make console
+
+
+Nginx needs to be started and there's paths hardcoded in nginx.conf, this bit needs to be improved
+/path/to/nginx -c /path/to/widgy/nginx.conf
+
+http://localhost:8080
