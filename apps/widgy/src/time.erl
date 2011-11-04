@@ -10,8 +10,6 @@
 
 -behaviour(gen_server).
 
--include_lib("misultin/include/misultin.hrl").
-
 %% API
 -export([start_link/0]).
 
@@ -90,7 +88,7 @@ handle_call(send_time, _From, State) ->
     io:format("Sending time:~p ~n", [Clients]),
     lists:foreach(fun(Client) ->
                           {{_,_,_},{Hour,Minute,Second}} = calendar:now_to_universal_time(now()),
-                          widgy_websockets_server:send(?MODULE, Client, [{hour, Hour}, {minute, Minute}, {second, Second}])
+                          widgy_handler:send(?MODULE, Client, [{hour, Hour}, {minute, Minute}, {second, Second}])
                   end,
                   Clients),
     {reply, ok, State};
