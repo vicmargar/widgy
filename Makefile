@@ -11,7 +11,7 @@ console:
 	./rel/widgy/bin/widgy console
 
 quick-console:
-	erl -config rel/files/sys.config -pa  apps/*/ebin -pa vendor/*/ebin -pa -boot start_sasl -eval "reloader:start(),application:start(widgy)"
+	erl -config rel/files/sys.config -pa apps/*/ebin -pa deps/*/ebin -boot start_sasl -eval 'application:start(cowboy),application:start(widgy)'
 
 start_nginx:
 	nginx -p . -c ./nginx.conf
