@@ -5,15 +5,12 @@ function addStatus(text){
 
 function ready(){
     if ("WebSocket" in window) {
-        alert('We have websockets!');
         // browser supports websockets
         var ws = new WebSocket("ws://localhost:8081/service");
         ws.onopen = function() {
             alert('connected!');
             // websocket is connected
-            addStatus("websocket connected!");
-            // send hello data to server.
-            ws.send("hello server!");
+            start(ws);
             addStatus("sent message to server: 'hello server'!");
         };
         ws.onmessage = function (evt) {
@@ -28,4 +25,8 @@ function ready(){
         // browser does not support websockets
         addStatus("sorry, your browser does not support websockets.");
     }
+}
+
+function start(ws){
+    ws.send("subscribe:time");
 }
