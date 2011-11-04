@@ -29,5 +29,9 @@ init([]) ->
                              {widgy_websockets_server, start_link, [Port]},
                              permanent, 5000, worker, [widgy_websockets_server]},
 
-    {ok, { {one_for_one, 5, 10}, [WidgyWebsocketsServer]} }.
+    TimeServer = {time,
+                  {time, start_link, []},
+                  permanent, 5000, worker, [time]},
+
+    {ok, { {one_for_one, 5, 10}, [WidgyWebsocketsServer, TimeServer]} }.
 
