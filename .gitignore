@@ -11,8 +11,5 @@
 .#*
 *#
 .eunit
-!rel/files
-!rel/*/overlay
-!rel/*/reltool.config
-rel/*/*
+rel/widgy
 deps/*
