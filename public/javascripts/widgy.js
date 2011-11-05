@@ -5,7 +5,7 @@ function addStatus(text){
 function ready(){
     if ("WebSocket" in window) {
         // browser supports websockets
-        var ws = new WebSocket("ws://localhost:8081/service");
+        var ws = new WebSocket("ws://localhost:8081");
         ws.onopen = function() {
             // websocket is connected
             start(ws);
@@ -20,7 +20,7 @@ function ready(){
         };
     } else {
         // browser does not support websockets
-        addStatus("sorry, your browser does not support websockets.");
+        addStatus("Sorry, your browser does not support websockets.");
     }
 }
 

@@ -9,11 +9,15 @@
 init({_Any, http}, Req, []) ->
     case cowboy_http_req:header('Upgrade', Req) of
         {<<"websocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket};
-        {<<"WebSocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket}
+        {<<"WebSocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket};
+        _Other -> {ok, Req, undefined_state}
     end.
 
 handle(Req, State) ->
-    {ok, Req}.
+    PathInfo = cowboy_http_req:path_info(Req),
+    io:format("Path Infor ~p~n", [PathInfo]),
+    {ok, Req2} = cowboy_http_req:reply(200, [], <<"Hello world!">>, Req),
+    {ok, Req2, State}.
 
 terminate(_Req, _State) ->
     ok.
