@@ -1,6 +1,5 @@
 function addStatus(text){
-    var date = new Date();
-    document.getElementById('status').innerHTML = document.getElementById('status').innerHTML + date + ": " + text + "<br>";
+    document.getElementById('status').innerHTML = document.getElementById('status').innerHTML + text + "<br>";
 }
 
 function ready(){
@@ -8,14 +7,12 @@ function ready(){
         // browser supports websockets
         var ws = new WebSocket("ws://localhost:8081/service");
         ws.onopen = function() {
-            alert('connected!');
             // websocket is connected
             start(ws);
-            addStatus("sent message to server: 'hello server'!");
         };
         ws.onmessage = function (evt) {
             var receivedMsg = evt.data;
-            addStatus("server sent the following: '" + receivedMsg + "'");
+            addStatus(receivedMsg);
         };
         ws.onclose = function() {
             // websocket was closed
