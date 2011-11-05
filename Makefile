@@ -1,3 +1,5 @@
+get-deps:
+	./rebar get-deps
 compile:
 	./rebar compile
 
@@ -16,4 +18,4 @@ quick-console:
 start_nginx:
 	nginx -p . -c ./nginx.conf
 
-all: compile clean_generate generate
+all: get-deps compile clean_generate generate
