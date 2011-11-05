@@ -1,3 +1,8 @@
+%% @doc Handles client subscriptions to Widgets
+%%
+%% This gen_server is responsible for keeping track of which client is subscribed
+%% to which widget and viceversa.
+
 -module(widgy_subscriptions_handler).
 
 -behaviour(gen_server).
@@ -61,7 +66,6 @@ terminate(_Reason, _State) ->
 
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
-
 
 update_widgets_table(Widget, Client) ->
     Clients = case ets:lookup(?WIDGETS_TABLE, Widget) of
