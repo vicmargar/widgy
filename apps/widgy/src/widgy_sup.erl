@@ -32,6 +32,11 @@ init([]) ->
     WidgySubscriptionsHandler = {widgy_subscriptions_handler,
                              {widgy_subscriptions_handler, start_link, []},
                              permanent, 5000, worker, [widgy_subscriptions_handler]},
+
+    WidgySubscriptionsHandler = {widgy_data_gatherer,
+                             {widgy_data_gatherer, start_link, []},
+                             permanent, 5000, worker, [widgy_data_gatherer]},
+
     TimeServer = {time,
                   {time, start_link, []},
                   permanent, 5000, worker, [time]},

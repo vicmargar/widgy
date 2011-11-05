@@ -88,7 +88,9 @@ handle_call(send_time, _From, State) ->
     io:format("Sending time:~p ~n", [Clients]),
     lists:foreach(fun(Client) ->
                           {{_,_,_},{Hour,Minute,Second}} = calendar:now_to_universal_time(now()),
-                          widgy_handler:send(?MODULE, Client, [{hour, Hour}, {minute, Minute}, {second, Second}])
+                          WidgetState = [{hour, Hour}, {minute, Minute}, {second, Second}],
+                          widgy_handler:send(?MODULE, Client, WidgetState),
+                          widgy_data_gatherer:update_widget_state(?MODULE, WidgetState),
                   end,
                   Clients),
     {reply, ok, State};

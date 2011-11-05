@@ -7,7 +7,7 @@
 -module(widgy_data_gatherer).
 -behaviour(gen_server).
 
--include("widgy/include/widgy.hrl").
+-include("apps/widgy/include/widgy.hrl").
 
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -49,7 +49,7 @@ handle_call(notify_clients, _From, State) ->
                                   end
                           end,
                           ?WIDGETS),
-    io:format("Notify clints:~p~n", [ LatestWidgetState ]),
+    io:format("Notify clients:~p~n", [ LatestWidgetState ]),
     {reply, ok, State};
 
 handle_call(_Request, _From, State) ->
