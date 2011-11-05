@@ -26,6 +26,7 @@ websocket_handle({text, Data}, Req, State) ->
     case string:tokens(binary_to_list(Data), ":") of
         ["subscribe", ModuleStr] ->
             Module = list_to_atom(ModuleStr),
+            widgy_subscriptions_handler:subscribe(Module, self()),
             Module:subscribe(self());
         Command ->
             io:format("ERROR - Unknown command: ~p~n", [Command])
