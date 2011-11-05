@@ -4,7 +4,7 @@
 -export([init/3, handle/2, terminate/2]).
 -export([websocket_init/3, websocket_handle/3,
         websocket_info/3, websocket_terminate/3]).
--export([send/3]).
+-export([send/2]).
 
 init({_Any, http}, Req, []) ->
     case cowboy_http_req:header('Upgrade', Req) of
@@ -26,8 +26,7 @@ websocket_handle({text, Data}, Req, State) ->
     case string:tokens(binary_to_list(Data), ":") of
         ["subscribe", ModuleStr] ->
             Module = list_to_atom(ModuleStr),
-            widgy_subscriptions_handler:subscribe(Module, self()),
-            Module:subscribe(self());
+            widgy_subscriptions_handler:subscribe(Module, self());
         Command ->
             io:format("ERROR - Unknown command: ~p~n", [Command])
     end,
@@ -35,9 +34,8 @@ websocket_handle({text, Data}, Req, State) ->
 websocket_handle(_Any, Req, State) ->
     {ok, Req, State}.
 
-websocket_info({send, Module, Params}, Req, State) ->
-    NewParams = [ {widget, Module} | Params ],
-    Data = mochijson2:encode({struct, NewParams}),
+websocket_info({send, Params}, Req, State) ->
+    Data = mochijson2:encode({struct, Params}),
     {reply, {text, Data}, Req, State, hibernate};
 websocket_info(_Info, Req, State) ->
     {ok, Req, State, hibernate}.
@@ -45,5 +43,5 @@ websocket_info(_Info, Req, State) ->
 websocket_terminate(_Reason, _Req, _State) ->
     ok.
 
-send(Module, Client, Params) ->
-    Client ! {send, Module, Params}.
+send(Client, Params) ->
+    Client ! {send, Params}.
