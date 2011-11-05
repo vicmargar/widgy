@@ -12,7 +12,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
--export([subscribe/2, list_clients/0, list_widgets/0]).
+-export([subscribe/2, notify_clients/1, list_clients/0, list_widgets/0]).
 
 -define(SERVER, ?MODULE).
 
@@ -23,6 +23,9 @@
 
 subscribe(Widget, Client) ->
     gen_server:call(?MODULE, {subscribe, Widget, Client}).
+
+notify_clients(WidgetsState) ->
+    gen_server:call(?MODULE, {notify_clients, WidgetsState}).
 
 list_clients() ->
     gen_server:call(?MODULE, list_clients).
@@ -41,6 +44,15 @@ init([]) ->
 handle_call({subscribe, Widget, Client}, _From, State) ->
     update_widgets_table(Widget, Client),
     update_clients_table(Widget, Client),
+    {reply, ok, State};
+
+handle_call({notify_clients, WidgetsState}, _From, State) ->
+    lists:foreach(fun({Widget, WidgetState}) ->
+                      Clients = get_clients_for_widget(Widget),
+                      notify_clients(Widget, WidgetState, Clients)
+                  end,
+                  WidgetsState),
+
     {reply, ok, State};
 
 handle_call(list_clients, _From, State) ->
@@ -68,12 +80,20 @@ code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
 
 update_widgets_table(Widget, Client) ->
-    Clients = case ets:lookup(?WIDGETS_TABLE, Widget) of
-                  [] -> [];
-                  [{Widget, ExistingClients}] -> ExistingClients
-              end,
+    Clients = get_clients_for_widget(Widget),
     NewClients = {Widget, [Client | Clients]},
     ets:insert(?WIDGETS_TABLE, NewClients).
 
 update_clients_table(Widget, Client) ->
     ets:insert(?CLIENTS_TABLE, {Client, Widget}).
+
+get_clients_for_widget(Widget) ->
+    case ets:lookup(?WIDGETS_TABLE, Widget) of
+        [] -> [];
+        [{Widget, ExistingClients}] -> ExistingClients
+    end.
+
+notify_clients(Widget, WidgetState, Clients) ->
+    lists:foreach(fun(Client) ->
+                          widgy_handler:send(Client, [{widget, Widget} | WidgetState])
+                  end,Clients).
