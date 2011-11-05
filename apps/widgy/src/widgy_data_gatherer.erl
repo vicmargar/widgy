@@ -7,7 +7,7 @@
 -module(widgy_data_gatherer).
 -behaviour(gen_server).
 
--include("apps/widgy/include/widgy.hrl").
+-include_lib("widgy/include/widgy.hrl").
 
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -16,7 +16,7 @@
 
 -define(SERVER, ?MODULE).
 
--record(state, {widgets=[]}).
+-record(state, {widgets=[], timer}).
 
 update_widget_state(Widget, State) ->
     gen_server:call(?MODULE, {update_widget_state, Widget, State}).
@@ -28,18 +28,18 @@ start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 init([]) ->
-    timer:apply_interval(1000, ?MODULE, notify_clients, []),
-    {ok, #state{}}.
+    {ok, Timer} = timer:apply_interval(1000, ?MODULE, notify_clients, []),
+    {ok, #state{timer=Timer, widgets=[]}}.
 
 handle_call({update_widget_state, Widget, WidgetState}, _From, State) ->
     %% prepend to the beginning of the list so when we do a lookup
     %% the first appearance of a widget is always the latest update.
-    NewWidgetsState = [{Widget, Widget} | State#state.widgets],
-    {reply, ok, State#state{widgets = NewWidgetsState}}.
+    NewWidgetsState = [{Widget, WidgetState} | State#state.widgets],
+    {reply, ok, State#state{widgets = NewWidgetsState}};
 
 handle_call(notify_clients, _From, State) ->
     UpdatedWidgets = State#state.widgets,
-    LatestWidgetState = lists:map(
+    LatestWidgetState = lists:flatten(lists:map(
                           fun(W) ->
                                   %% This just returns the latest update
                                   %% at the front of the list
@@ -48,9 +48,9 @@ handle_call(notify_clients, _From, State) ->
                                       {W, LatestState} -> {W, LatestState}
                                   end
                           end,
-                          ?WIDGETS),
-    io:format("Notify clients:~p~n", [ LatestWidgetState ]),
-    {reply, ok, State};
+                          ?WIDGETS)),
+    widgy_subscriptions_handler:notify_clients(LatestWidgetState),
+    {reply, ok, State#state{widgets=[]}};
 
 handle_call(_Request, _From, State) ->
     Reply = ok,
