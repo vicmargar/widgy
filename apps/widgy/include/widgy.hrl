@@ -1,1 +1,1 @@
--define(WIDGETS, [time]).
+-define(WIDGETS, [time, temperature]).

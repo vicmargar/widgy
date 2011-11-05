@@ -29,4 +29,5 @@ function ready(){
 
 function start(ws){
     ws.send("subscribe:time");
+    ws.send("subscribe:temperature");
 }
