@@ -1,4 +1,4 @@
--module(widgy_websockets_server).
+-module(widgy_server).
 -export([start_link/1, stop/0]).
 
 -define(SERVER_HANDLE, widgy).
