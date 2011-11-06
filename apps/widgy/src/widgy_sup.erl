@@ -38,7 +38,7 @@ init([]) ->
                              {widgy_data_gatherer, start_link, []},
                              permanent, 5000, worker, [widgy_data_gatherer]},
 
-    TimeServer = ?WIDGET(time, 10000),
+    TimeServer = ?WIDGET(time, 1000),
     TemperatureServer = ?WIDGET(temperature, 3000),
 
     {ok, { {one_for_one, 5, 10},
