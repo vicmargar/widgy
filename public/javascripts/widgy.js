@@ -1,8 +1,25 @@
-function addStatus(text){
-    document.getElementById('status').innerHTML = document.getElementById('status').innerHTML + text + "<br>";
+function process_message(JSONMessage){
+    message = JSON.parse(JSONMessage);
+
+    switch(message.widget){
+    case "time":
+        time.set(message);
+        break;
+    case "temperature":
+        temperature.set(message);
+        break;
+    default:
+        console.log("unknown widget");
+    };
 }
 
 function ready(){
+    time = new Time();
+    window.TimeView = new TimeView({model: time});
+
+    temperature = new Temperature();
+    window.TemperatureView = new TemperatureView({model: temperature});
+
     if ("WebSocket" in window) {
         // browser supports websockets
         var ws = new WebSocket("ws://localhost:8081");
@@ -12,7 +29,7 @@ function ready(){
         };
         ws.onmessage = function (evt) {
             var receivedMsg = evt.data;
-            addStatus(receivedMsg);
+            process_message(receivedMsg);
         };
         ws.onclose = function() {
             // websocket was closed
