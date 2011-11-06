@@ -1,16 +1,7 @@
 function process_message(JSONMessage){
     message = JSON.parse(JSONMessage);
-
-    switch(message.widget){
-    case "time":
-        time.set(message);
-        break;
-    case "temperature":
-        temperature.set(message);
-        break;
-    default:
-        console.log("unknown widget");
-    };
+    widget = widgets[message.widget];
+    widget.set(message);
 }
 
 function ready(){
@@ -19,6 +10,10 @@ function ready(){
 
     temperature = new Temperature();
     window.TemperatureView = new TemperatureView({model: temperature});
+
+    widgets = new Object();
+    widgets["time"] = time;
+    widgets["temperature"] = temperature;
 
     if ("WebSocket" in window) {
         // browser supports websockets

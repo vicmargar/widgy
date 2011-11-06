@@ -3,13 +3,13 @@ var Time = Backbone.Model.extend({
 });
 
 var TimeView = Backbone.View.extend({
-    tagName : "div",
+    tagName : "span",
     className : "time-content",
 
     render : function() {
-        hour = this.model.get('hour');
-        minute = this.model.get('minute');
-        second = this.model.get('second');
+        hour = pad2(this.model.get('hour'));
+        minute = pad2(this.model.get('minute'));
+        second = pad2(this.model.get('second'));
         $(this.el).html(hour + ":" + minute + ":" + second);
         $('#time').html(this.el);
         return this;
@@ -21,3 +21,7 @@ var TimeView = Backbone.View.extend({
         this.model.fetch();
     }
 });
+
+function pad2(number) {
+    return (number < 10 ? '0' : '') + number
+};

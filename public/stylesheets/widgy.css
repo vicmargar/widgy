@@ -1,0 +1,12 @@
+body{
+    background: #21638c;
+    background-image: url("background1.jpeg"), url("background2.jpeg");
+    background-repeat: repeat-x, repeat;
+}
+
+h1 {
+    font-family:georgia,serif;
+    color:#7A3D99;
+    text-align:center;
+    font-size:75px;
+}
