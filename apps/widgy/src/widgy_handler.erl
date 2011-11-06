@@ -6,6 +6,8 @@
         websocket_info/3, websocket_terminate/3]).
 -export([send/2]).
 
+-include_lib("widgy/include/widgy.hrl").
+
 init({_Any, http}, Req, []) ->
     case cowboy_http_req:header('Upgrade', Req) of
         {<<"websocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket};
@@ -14,10 +16,21 @@ init({_Any, http}, Req, []) ->
     end.
 
 handle(Req, State) ->
-    PathInfo = cowboy_http_req:path_info(Req),
-    io:format("Path Infor ~p~n", [PathInfo]),
-    {ok, Req2} = cowboy_http_req:reply(200, [], <<"Hello world!">>, Req),
+    {Path, Req} = cowboy_http_req:path(Req),
+    {Code, Response} = handle_request(Path),
+    {ok, Req2} = cowboy_http_req:reply(Code, [], Response, Req),
     {ok, Req2, State}.
+
+handle_request([<<"widgets">>, Widget]) ->
+    StrWidget = binary_to_list(Widget),
+    WidgetName = list_to_atom(StrWidget),
+    case lists:member(WidgetName, ?WIDGETS) of
+        true -> {200, mochijson2:encode({struct, WidgetName:get_state()})};
+        _ -> {404, "Not Found"}
+    end;
+
+handle_request(_) ->
+    {404, "Not Found"}.
 
 terminate(_Req, _State) ->
     ok.
