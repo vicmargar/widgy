@@ -39,7 +39,7 @@ init([]) ->
                              permanent, 5000, worker, [widgy_data_gatherer]},
 
     TimeServer = ?WIDGET(time, 1000),
-    TemperatureServer = ?WIDGET(temperature, 3000),
+    TemperatureServer = ?WIDGET(temperature, 60000),
 
     {ok, { {one_for_one, 5, 10},
            [WidgyWebsocketsServer, WidgySubscriptionsHandler, WidgyDataGatherer, TimeServer,
