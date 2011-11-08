@@ -1,12 +1,36 @@
 body{
-    background: #21638c;
-    background-image: url("background1.jpeg"), url("background2.jpeg");
-    background-repeat: repeat-x, repeat;
+   background: #333;
 }
 
 h1 {
-    font-family:georgia,serif;
-    color:#7A3D99;
-    text-align:center;
-    font-size:75px;
+    color: white;
+    display: inline;
+    font-size: 6em;
+    text-shadow: 0 .125em .25em black;
+    vertical-align: middle;
+    font-family: 'Myriad Pro',Verdana,Arial,Helvetica,sans-serif;
+    margin: 1em 0 0 0;
+    -webkit-margin-before: 0.67em;
+    -webkit-margin-after: 0.67em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.widget{
+    background-image: -moz-radial-gradient(center top,0,center top,500,#333,#000);
+    background-image: -webkit-gradient(radial,center top,0,center top,500,from(#333),to(#000));
+    border: 1px solid black;
+    border-radius: 10px;
+    color: white;
+    margin: 1em auto;
+    height: 60px;
+    max-width: 250px;
+    padding: 1em;
+    text-align: center;
+
+    -webkit-box-shadow: 0px 3px 5px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 3px 5px rgba(0,0,0,0.5);
+    box-shadow: 0px 3px 5px rgba(0,0,0,0.5);
 }

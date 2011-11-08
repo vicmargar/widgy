@@ -33,7 +33,11 @@ function ready(){
     } else {
         // browser does not support websockets
         addStatus("Sorry, your browser does not support websockets.");
-    }
+    };
+
+    $(function() {
+		$( ".widget" ).draggable();
+	});
 }
 
 function start(ws){

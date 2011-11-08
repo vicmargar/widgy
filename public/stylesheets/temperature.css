@@ -1,0 +1,6 @@
+.temperature-content{
+    display: inline-block;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 50px;
+    font-weight: bold;
+}

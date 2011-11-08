@@ -10,7 +10,7 @@ var TimeView = Backbone.View.extend({
         hour = pad2(this.model.get('hour'));
         minute = pad2(this.model.get('minute'));
         second = pad2(this.model.get('second'));
-        $(this.el).html(hour + ":" + minute + ":" + second);
+        $(this.el).html("<span id='hour'>" + hour + "</span>:<span id='minute'>" + minute + "</span>:<span id='second'>" + second + "</span>");
         $('#time').html(this.el);
         return this;
     },

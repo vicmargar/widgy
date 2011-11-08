@@ -7,7 +7,7 @@ var TemperatureView = Backbone.View.extend({
     className : "temperature-content",
 
     render : function() {
-        $(this.el).html(this.model.get('temperature'));
+        $(this.el).html(this.model.get('temperature') + "&deg;C");
         $('#temperature').html(this.el);
         return this;
     },
