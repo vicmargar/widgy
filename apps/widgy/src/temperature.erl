@@ -18,6 +18,7 @@ get_state() ->
     Temp = try lhttpc:request(URL, "GET", [], 1000) of
                {ok, {{200, "OK"},Headers,Body}} ->
                    { Xml, _Rest } = xmerl_scan:string(binary_to_list(Body)),
+                   %% TODO: Handle empty response
                    [DataAttribute] = xmerl_xpath:string("/xml_api_reply/weather/current_conditions/temp_c/@data", Xml),
                    DataAttribute#xmlAttribute.value;
                {error, timeout} ->
