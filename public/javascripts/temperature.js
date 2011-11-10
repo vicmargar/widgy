@@ -8,7 +8,7 @@ var TemperatureView = Backbone.View.extend({
 
     render : function() {
         $(this.el).html(this.model.get('temperature') + "&deg;C");
-        $('#temperature .front').html(this.el);
+        $('#temperature > .front > .content').html(this.el);
         return this;
     },
 
@@ -16,5 +16,13 @@ var TemperatureView = Backbone.View.extend({
         _.bindAll(this, 'render');
         this.model.bind('change', this.render);
         this.model.fetch();
+
+        $('#temperature > .front > .configure').click(function(){
+		    $('#temperature').addClass('flip');
+	    });
+
+	    $('#temperature > .back > .unconfigure').click(function(){
+		    $('#temperature').removeClass('flip');
+	    });
     }
 });

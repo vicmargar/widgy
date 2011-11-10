@@ -18,59 +18,32 @@ h1 {
     text-align: center;
 }
 
-@media all and (-webkit-transform-3d) {
-    /* Use the media query to determine if 3D transforms are supported */
-    /* #flip-container { */
-    /*     -webkit-perspective: 1000; */
-    /* } */
-    /* #flip-card { */
-    /*     width: 100%; */
-    /*     height: 100%; */
-    /*     -webkit-transform-style: preserve-3d; */
-    /*     -webkit-transition: -webkit-transform 1s; */
-    /* } */
-    /* /\*#flip-container:hover #flip-card { */
-    /*     -webkit-transform: rotateY(180deg); */
-    /* }*\/ */
-
-    .face {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        -webkit-backface-visibility: hidden;
-    }
-
-    .face.front {
-        height 500 px;
-        display: block;
-        //-webkit-transform: rotateY(180deg);
-        -webkit-box-sizing: border-box;
-        padding: 10px;
-        font-size: 12pt;
-        color: white;
-        text-align: center;
-        background-color: red;
-        -webkit-border-radius: 10px;
-    }
-
-    .face.back {
-        height: 500 px;
-        display: block;
-        -webkit-transform: rotateY(180deg);
-        -webkit-box-sizing: border-box;
-        padding: 10px;
-        font-size: 12pt;
-        color: white;
-        text-align: center;
-        background-color: #835A99;
-        -webkit-border-radius: 10px;
-    }
-
+.widget {
+    float: left;
 }
 
 .widget .front{
     background-image: -moz-radial-gradient(center top,0,center top,500,#333,#000);
     background-image: -webkit-gradient(radial,center top,0,center top,500,from(#333),to(#000));
+    border: 1px solid black;
+    border-radius: 10px;
+    color: white;
+    margin: 1em auto;
+    padding: 1em;
+    text-align: center;
+
+    -webkit-box-shadow: 0px 3px 5px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 3px 5px rgba(0,0,0,0.5);
+    box-shadow: 0px 3px 5px rgba(0,0,0,0.5);
+}
+
+.widget .back{
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    background-image: -moz-radial-gradient(center top,0,center top,500,#333,#fff);
+    background-image: -webkit-gradient(radial,center top,0,center top,500,from(#333),to(#fff));
     border: 1px solid black;
     border-radius: 10px;
     color: white;
@@ -85,9 +58,58 @@ h1 {
     box-shadow: 0px 3px 5px rgba(0,0,0,0.5);
 }
 
-.widget .back{
-    background-color: white;
-    display: none;
-    -webkit-transform: rotateY(180deg);
-    -webkit-box-sizing: border-box;
+.panel {
+	-webkit-perspective: 600;
+}
+/* -- make sure to declare a default for every property that you want animated -- */
+/* -- general styles, including Y axis rotation -- */
+.panel .front {
+	-webkit-transform: rotateY(0deg);
+	-webkit-transform-style: preserve-3d;
+	-webkit-backface-visibility: hidden;
+
+	/* -- transition is the magic sauce for animation -- */
+	-o-transition: all .4s ease-in-out;
+	-ms-transition: all .4s ease-in-out;
+	-moz-transition: all .4s ease-in-out;
+	-webkit-transition: all .4s ease-in-out;
+	transition: all .4s ease-in-out;
+}
+.panel.flip .front {
+	z-index: 900;
+	-webkit-transform: rotateY(180deg);
+}
+
+.panel .back {
+	-webkit-transform: rotateY(-180deg);
+	-webkit-transform-style: preserve-3d;
+	-webkit-backface-visibility: hidden;
+
+	/* -- transition is the magic sauce for animation -- */
+	-o-transition: all .4s ease-in-out;
+	-ms-transition: all .4s ease-in-out;
+	-moz-transition: all .4s ease-in-out;
+	-webkit-transition: all .4s ease-in-out;
+	transition: all .4s ease-in-out;
+}
+
+.panel.flip .back {
+	z-index: 1000;
+	-webkit-transform: rotateY(0deg);
+}
+
+/* -- X axis rotation for click panel -- */
+.click .front {
+	cursor: pointer;
+	-webkit-transform: rotateX(0deg);
+}
+.click.flip .front {
+	-webkit-transform: rotateX(180deg);
+}
+.click .back {
+	cursor: pointer;
+	-webkit-transform: rotateX(-180deg);
+}
+.click.flip .back {
+	-webkit-transform: rotateX(0deg);
 }

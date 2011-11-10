@@ -11,7 +11,7 @@ var TimeView = Backbone.View.extend({
         minute = pad2(this.model.get('minute'));
         second = pad2(this.model.get('second'));
         $(this.el).html("<span id='hour'>" + hour + "</span>:<span id='minute'>" + minute + "</span>:<span id='second'>" + second + "</span>");
-        $('#time .front').html(this.el);
+        $('#time > .front > .content').html(this.el);
         return this;
     },
 
@@ -19,6 +19,14 @@ var TimeView = Backbone.View.extend({
         _.bindAll(this, 'render');
         this.model.bind('change', this.render);
         this.model.fetch();
+
+	    $('#time > .front > .configure').click(function(){
+		    $('#time').addClass('flip');
+	    });
+
+	    $('#time > .back > .unconfigure').click(function(){
+		    $('#time').removeClass('flip');
+	    });
     }
 });
 

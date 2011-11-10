@@ -38,6 +38,17 @@ function ready(){
     $(function() {
 		$( ".widget" ).draggable();
 	});
+
+    // // set up block configuration
+	// $('.block .configure').click(function(){
+	// 	$('.block').addClass('flip');
+	// });
+
+    // // remove block configuration
+	// $('.block .unconfigure').click(function(){
+	// 	$('.block').removeClass('flip');
+	// });
+
 }
 
 function start(ws){

@@ -18,44 +18,30 @@
 
   </head>
   <body onload="ready();">
-    <h1>Widgy!</h1>
-    <div class="widget" id="time">
-      <div class="front"></div>
-      </div class= "back"></div>
-    </div>
-    <div class="widget" id="temperature">
-      <div class="front"></div>
-      </div class= "back"></div>
-    </div>
 
-    <div id="flip-container">
-      <div id="flip-card">
-        <div class="front face">
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-        </div>
-        <div class="back face">
-          <p>Back</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-          <p>Front</p>
-        </div>
+    <h1>Widgy!</h1>
+
+    <div class="widget block panel" id="time">
+     <div class="front">
+        <a class="configure">Configure Block</a>
+        <div class="content"></div>
+      </div>
+      <div class= "back">
+        <p>Back Time</p>
+        <a class="unconfigure">Done</a>
       </div>
     </div>
 
-    <div id="status"></div>
+    <div class="widget block panel" id="temperature">
+      <div class="front">
+        <a class="configure">Configure Block</a>
+        <div class="content"></div>
+      </div>
+      <div class= "back">
+        <p>Back Temperature</p>
+        <a class="unconfigure">Done</a>
+      </div>
+    </div>
+
   </body>
 </html>
