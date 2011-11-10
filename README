@@ -1,7 +1,5 @@
-./rebar get-deps
 make all
-make console
-
 make start_nginx
+make console
 
 http://localhost:8080
