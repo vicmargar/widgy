@@ -25,7 +25,7 @@ handle_request([<<"widgets">>, Widget]) ->
     StrWidget = binary_to_list(Widget),
     WidgetName = list_to_atom(StrWidget),
     case lists:member(WidgetName, ?WIDGETS) of
-        true -> {200, mochijson2:encode({struct, WidgetName:get_state()})};
+        true -> {200, mochijson2:encode({struct, [{config, {struct, WidgetName:get_config_options()}} | WidgetName:get_state()]})};
         _ -> {404, "Not Found"}
     end;
 

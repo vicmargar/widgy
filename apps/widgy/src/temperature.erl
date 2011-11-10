@@ -1,9 +1,12 @@
 -module(temperature).
 -behaviour(gen_widget).
 
--export([get_state/0]).
+-export([get_state/0, get_config_options/0]).
 
 -include_lib("xmerl/include/xmerl.hrl").
+
+get_config_options() ->
+    [{locations, [<<"London">>, <<"Madrid">>, <<"Oviedo">>]}].
 
 get_state() ->
 
@@ -11,8 +14,17 @@ get_state() ->
     %% This is necessary to handle badarg errors in lhttpc
     %% process_flag(trap_exit, true),
 
-    Location = "London",
-    URL = "http://www.google.com/ig/api?weather=" ++ Location,
+    Config = get_config_options(),
+    Locations = proplists:get_value(locations, Config),
+
+    lists:map(fun(Location) ->
+                      Temperature = get_temperature_for_location(Location),
+                      {Location, Temperature}
+              end,
+              Locations).
+
+get_temperature_for_location(Location) ->
+    URL = "http://www.google.com/ig/api?weather=" ++ binary_to_list(Location),
 
     %% TODO: Abstract HTTP calls in a separate module
     Temp = try lhttpc:request(URL, "GET", [], 1000) of
@@ -43,4 +55,4 @@ get_state() ->
                    io:format("Unexpected Error: ~p:~p~n", [Class, Error])
            end,
 
-    [{temperature, list_to_integer(Temp)}].
+    list_to_integer(Temp).

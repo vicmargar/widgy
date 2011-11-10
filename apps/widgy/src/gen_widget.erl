@@ -12,7 +12,10 @@
 -export([send_state/1]).
 
 behaviour_info(callbacks) ->
-    [{get_state,0}];
+    [
+     {get_state,0},
+     {get_config_options,0}
+    ];
 behaviour_info(_Other) ->
     undefined.
 
