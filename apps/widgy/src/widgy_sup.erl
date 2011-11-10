@@ -26,9 +26,9 @@ start_link() ->
 init([]) ->
     {ok, Port} = application:get_env(widgy, websockets_port),
 
-    WidgyWebsocketsServer = {widgy_websockets_server,
-                             {widgy_websockets_server, start_link, [Port]},
-                              permanent, 5000, worker, [widgy_websockets_server]},
+    WidgyWebsocketsServer = {widgy_server,
+                             {widgy_server, start_link, [Port]},
+                              permanent, 5000, worker, [widgy_server]},
 
     WidgySubscriptionsHandler = {widgy_subscriptions_handler,
                              {widgy_subscriptions_handler, start_link, []},
@@ -42,8 +42,7 @@ init([]) ->
     TemperatureServer = ?WIDGET(temperature, 60000),
 
     {ok, { {one_for_one, 5, 10},
-           [WidgyWebsocketsServer, WidgySubscriptionsHandler, WidgyDataGatherer, TimeServer,
-           TemperatureServer]
+           [WidgyWebsocketsServer, WidgySubscriptionsHandler, WidgyDataGatherer, TimeServer, TemperatureServer]
          }
     }.
 
