@@ -17,7 +17,8 @@ function ready(){
 
     if ("WebSocket" in window) {
         // browser supports websockets
-        var ws = new WebSocket("ws://localhost:8081");
+        var wshost = window.location.host.split(':')[0];
+        var ws = new WebSocket("ws://" + wshost + ":8081");
         ws.onopen = function() {
             // websocket is connected
             start(ws);
@@ -28,11 +29,11 @@ function ready(){
         };
         ws.onclose = function() {
             // websocket was closed
-            addStatus("websocket was closed");
+            //addStatus("websocket was closed");
         };
     } else {
         // browser does not support websockets
-        addStatus("Sorry, your browser does not support websockets.");
+        //addStatus("Sorry, your browser does not support websockets.");
     };
 
     $(function() {
