@@ -12,7 +12,6 @@ var TemperatureView = Backbone.View.extend({
         $(this.el).html(default_location + " : " + this.model.get(default_location) + "&deg;C");
         $('#temperature > .front > .content').html(this.el);
 
-
         var locations = temperature.get('config').locations;
         var configOptions = "";
         var model = this.model;
@@ -29,6 +28,9 @@ var TemperatureView = Backbone.View.extend({
         var configHTML = "<select name='config'>" + configOptions + "</select>";
         $('#temperature > .back > .content').html(configHTML);
 
+        $('#temperature .back').width($('#temperature .front').width());
+        $('#temperature .back').height($('#temperature .front').height());
+
         return this;
     },
 
@@ -41,14 +43,14 @@ var TemperatureView = Backbone.View.extend({
         var view = this;
 
         $('#temperature > .front > .configure').click(function(){
-		    $('#temperature').addClass('flip');
-	    });
+        $('#temperature').addClass('flip');
+      });
 
-	    $('#temperature > .back > .unconfigure').click(function(){
+      $('#temperature > .back > .unconfigure').click(function(){
             var selected_option = $("#temperature > .back > .content > select > option:selected").val();
             model.default_location = selected_option;
             view.render();
-		    $('#temperature').removeClass('flip');
-	    });
+        $('#temperature').removeClass('flip');
+      });
     }
 });

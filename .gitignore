@@ -12,3 +12,4 @@
 .eunit
 rel/widgy
 deps/*
+.DS_Store
