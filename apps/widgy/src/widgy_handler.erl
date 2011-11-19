@@ -17,11 +17,12 @@ init({_Any, http}, Req, []) ->
 
 handle(Req, State) ->
     {Path, Req} = cowboy_http_req:path(Req),
-    {Code, Response} = handle_request(Path),
+    {Method, Req} = cowboy_http_req:method(Req),
+    {Code, Response} = handle_request(Method, Path),
     {ok, Req2} = cowboy_http_req:reply(Code, [], Response, Req),
     {ok, Req2, State}.
 
-handle_request([<<"widgets">>, Widget]) ->
+handle_request(_, [<<"widgets">>, Widget]) ->
     StrWidget = binary_to_list(Widget),
     WidgetName = list_to_atom(StrWidget),
     case lists:member(WidgetName, ?WIDGETS) of
@@ -29,7 +30,31 @@ handle_request([<<"widgets">>, Widget]) ->
         _ -> {404, "Not Found"}
     end;
 
-handle_request(_) ->
+handle_request('GET', [<<"api">>, <<"counters">>]) ->
+    CountersTable = ets:tab2list(?COUNTERS_TABLE),
+    Counters = lists:map(fun({Guid, Pid}) ->
+                                 {Guid, widgy_counter:get_count(Pid)}
+                         end, CountersTable),
+    JSON = mochijson2:encode({struct, Counters}),
+    {200, JSON};
+
+handle_request('POST', [<<"api">>, <<"counters">>]) ->
+    {Guid, Pid} = widgy_counter_sup:start_counter(),
+    {200, Guid};
+
+handle_request('GET', [<<"api">>, <<"counters">>, CounterId]) ->
+    Guid = binary_to_list(CounterId),
+    [{Guid, Pid}] = ets:lookup(?COUNTERS_TABLE, Guid),
+    Count = widgy_counter:get_count(Pid),
+    {200, integer_to_list(Count)};
+
+handle_request('POST', [<<"api">>, <<"counters">>, CounterId]) ->
+    Guid = binary_to_list(CounterId),
+    [{Guid, Pid}] = ets:lookup(?COUNTERS_TABLE, Guid),
+    NewCount = widgy_counter:increment(Pid),
+    {200, integer_to_list(NewCount)};
+
+handle_request(_,_) ->
     {404, "Not Found"}.
 
 terminate(_Req, _State) ->
