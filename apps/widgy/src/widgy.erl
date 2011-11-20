@@ -40,3 +40,7 @@ get_dashboard_pid(DashboardId) ->
 get_widget_pid(WidgetId) ->
     [{WidgetId, Pid}] = ets:lookup(?WIDGETS_TABLE, WidgetId),
     Pid.
+
+get_dashboards() ->
+    DashboardsTable = ets:tab2list(?DASHBOARDS_TABLE),
+    lists:map(fun({Id, _}) -> Id end, DashboardsTable).

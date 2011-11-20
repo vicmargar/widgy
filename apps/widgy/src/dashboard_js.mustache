@@ -1,0 +1,59 @@
+function process_message(JSONMessage){
+    // message = JSON.parse(JSONMessage);
+    // widget = widgets[message.widget];
+    if (widget != undefined) {
+        widget.set(message);
+    }
+}
+
+function ready(){
+
+    widgets = {};
+
+    //TODO: Add widgets dynamically based on what's on the dashboard
+
+    {{#widgets}}
+    {{/widgets}}
+
+    if ("WebSocket" in window) {
+        // browser supports websockets
+        var wshost = window.location.host.split(':')[0];
+        var ws = new WebSocket("ws://" + wshost + ":8081");
+        ws.onopen = function() {
+            // websocket is connected
+            start(ws);
+        };
+        ws.onmessage = function (evt) {
+            var receivedMsg = evt.data;
+            console.log(receivedMsg);
+            process_message(receivedMsg);
+        };
+        ws.onclose = function() {
+            // websocket was closed
+            //addStatus("websocket was closed");
+        };
+    } else {
+        // browser does not support websockets
+        //addStatus("Sorry, your browser does not support websockets.");
+    };
+
+    $(function() {
+		$( ".widget" ).draggable();
+	});
+
+    {{#widgets}}
+      $('#{{widget_id}} > .front > .configure').click(function(){
+        $('#{{widget_id}}').addClass('flip');
+      });
+      $('#{{widget_id}} > .back > .unconfigure').click(function(){
+        $('#{{widget_id}}').removeClass('flip');
+      });
+      $('#{{widget_id}} .back').width($('#{{widget_id}} .front').width());
+      $('#{{widget_id}} .back').height($('#{{widget_id}} .front').height());
+    {{/widgets}}
+
+}
+
+function start(ws){
+    ws.send("subscribe:{{dashboard_id}}");
+}

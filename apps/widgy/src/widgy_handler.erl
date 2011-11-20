@@ -30,6 +30,27 @@ handle_request(_, [<<"widgets">>, Widget]) ->
         _ -> {404, "Not Found"}
     end;
 
+handle_request('GET', [<<"dashboards">>]) ->
+    Dashboards = widgy:get_dashboards(),
+    TFun = mustache:compile(dashboards),
+    Ctx = dict:from_list([{dashboards, Dashboards}]),
+    Response = mustache:render(dashboards, TFun, Ctx),
+    {200, Response};
+
+handle_request('GET', [<<"dashboards">>, DashboardId]) ->
+    DashboardIdStr = binary_to_list(DashboardId),
+    TFun = mustache:compile(dashboard),
+    Ctx = dict:from_list([{dashboard_id, DashboardIdStr}]),
+    Response = mustache:render(dashboard, TFun, Ctx),
+    {200, Response};
+
+handle_request('GET', [<<"js">>, <<"dashboards">>, DashboardId]) ->
+    DashboardIdStr = binary_to_list(DashboardId),
+    TFun = mustache:compile('dashboard_js'),
+    Ctx = dict:from_list([{dashboard_id, DashboardIdStr}]),
+    Response = mustache:render('dashboard_js', TFun, Ctx),
+    {200, Response};
+
 handle_request('GET', [<<"api">>, <<"dashboards">>]) ->
     DashboardsTable = ets:tab2list(?DASHBOARDS_TABLE),
     GUIDS = lists:map(fun({Guid, _}) ->

@@ -18,4 +18,7 @@ quick-console:
 start_nginx:
 	nginx -p . -c ./nginx/nginx.conf
 
-all: get-deps compile clean_generate generate
+copy_mustache_templates:
+	cp apps/widgy/src/*.mustache rel/widgy/lib/widgy*/ebin/
+
+all: get-deps compile clean_generate generate copy_mustache_templates

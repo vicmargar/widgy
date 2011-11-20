@@ -16,7 +16,11 @@ start(_StartType, _StartArgs) ->
     ?WIDGETS_TABLE = ets:new(?WIDGETS_TABLE, [named_table, public, set]),
     ?DASHBOARDS_TABLE = ets:new(?DASHBOARDS_TABLE, [named_table, public, set]),
 
-    widgy_sup:start_link().
+    Res = widgy_sup:start_link(),
+
+    timer:sleep(1000),
+    setup(),
+    Res.
 
 
 stop(_State) ->

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="http://twitter.github.com/bootstrap/1.3.0/bootstrap.css">
+  </head>
+  <body>
+   <div class="topbar">
+      <div class="fill">
+        <div class="container">
+          <a class="brand" href="#">Widgy!</a>
+          <ul class="nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+       </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="content">
+        <div class="page-header">
+          <h1>Page name <small>Supporting text or tagline</small></h1>
+        </div>
+        <div class="row">
+          <div class="span10">
+            <h2>Dashboards</h2>
+             <table>
+                <tr>
+                  <th>Dashboard ID</th>
+                  <th>View</th>
+                  <th>JSON</th>
+                </tr>
+              {{#dash}}
+                <tr>
+                  <td>{{dashboard_id}}</td>
+                  <td><a href="/dashboards/{{dashboard_id}}">View</a></td>
+                  <td><a href="/api/dashboards/{{dashboard_id}}">JSON</a></td>
+                </tr>
+              {{/dash}}
+              </table>
+          </div>
+       </div>
+      </div>
+
+      <footer>
+        <p>&copy; Widgy! 2011</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+  </body>
+</html>
