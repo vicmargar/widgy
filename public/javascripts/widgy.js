@@ -1,7 +1,9 @@
 function process_message(JSONMessage){
     message = JSON.parse(JSONMessage);
     widget = widgets[message.widget];
-    widget.set(message);
+    if (widget != undefined) {
+        widget.set(message);
+    }
 }
 
 function ready(){
@@ -25,6 +27,7 @@ function ready(){
         };
         ws.onmessage = function (evt) {
             var receivedMsg = evt.data;
+            console.log(receivedMsg);
             process_message(receivedMsg);
         };
         ws.onclose = function() {
@@ -40,19 +43,11 @@ function ready(){
 		$( ".widget" ).draggable();
 	});
 
-    // // set up block configuration
-	// $('.block .configure').click(function(){
-	// 	$('.block').addClass('flip');
-	// });
-
-    // // remove block configuration
-	// $('.block .unconfigure').click(function(){
-	// 	$('.block').removeClass('flip');
-	// });
-
 }
 
 function start(ws){
-    ws.send("subscribe:time");
-    ws.send("subscribe:temperature");
+    //ws.send("subscribe:time");
+    //ws.send("subscribe:temperature");
+
+    ws.send("subscribe:dcb48187-4270-4533-9b80-1cc8044fe597");
 }
