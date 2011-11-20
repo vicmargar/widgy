@@ -30,28 +30,40 @@ handle_request(_, [<<"widgets">>, Widget]) ->
         _ -> {404, "Not Found"}
     end;
 
+handle_request('GET', [<<"api">>, <<"dashboards">>]) ->
+    DashboardsTable = ets:tab2list(?DASHBOARDS_TABLE),
+    GUIDS = lists:map(fun({Guid, _}) ->
+                              list_to_binary(Guid)
+                         end, DashboardsTable),
+    JSON = mochijson2:encode(GUIDS),
+    {200, JSON};
+
+handle_request('GET', [<<"api">>, <<"dashboards">>, DashboardId]) ->
+    DashboardIdStr = binary_to_list(DashboardId),
+    DashboardState = widgy:get_dashboard_state(DashboardIdStr),
+    JSON = mochijson2:encode({struct, DashboardState}),
+    {200, JSON};
+
 handle_request('GET', [<<"api">>, <<"counters">>]) ->
     CountersTable = ets:tab2list(?COUNTERS_TABLE),
-    Counters = lists:map(fun({Guid, Pid}) ->
-                                 {Guid, widgy_counter:get_count(Pid)}
+    Counters = lists:map(fun({Guid, _}) ->
+                                 {Guid, {struct, widgy_counter:get_state(Guid)}}
                          end, CountersTable),
     JSON = mochijson2:encode({struct, Counters}),
     {200, JSON};
 
 handle_request('POST', [<<"api">>, <<"counters">>]) ->
-    {Guid, Pid} = widgy_counter_sup:start_counter(),
+    Guid = widgy:start_counter(),
     {200, Guid};
 
 handle_request('GET', [<<"api">>, <<"counters">>, CounterId]) ->
     Guid = binary_to_list(CounterId),
-    [{Guid, Pid}] = ets:lookup(?COUNTERS_TABLE, Guid),
-    Count = widgy_counter:get_count(Pid),
-    {200, integer_to_list(Count)};
+    CounterState = widgy_counter:get_state(Guid),
+    {200, mochijson2:encode({struct, CounterState})};
 
 handle_request('POST', [<<"api">>, <<"counters">>, CounterId]) ->
     Guid = binary_to_list(CounterId),
-    [{Guid, Pid}] = ets:lookup(?COUNTERS_TABLE, Guid),
-    NewCount = widgy_counter:increment(Pid),
+    NewCount = widgy_counter:increment(Guid),
     {200, integer_to_list(NewCount)};
 
 handle_request(_,_) ->
@@ -66,9 +78,8 @@ websocket_init(_Any, Req, []) ->
 
 websocket_handle({text, Data}, Req, State) ->
     case string:tokens(binary_to_list(Data), ":") of
-        ["subscribe", ModuleStr] ->
-            Module = list_to_atom(ModuleStr),
-            widgy_subscriptions_handler:subscribe(Module, self());
+        ["subscribe", DashboardId] ->
+            widgy:subscribe_to_dashboard(self(), DashboardId);
         Command ->
             io:format("ERROR - Unknown command: ~p~n", [Command])
     end,
