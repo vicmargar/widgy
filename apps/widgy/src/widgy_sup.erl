@@ -1,4 +1,3 @@
-
 -module(widgy_sup).
 
 -behaviour(supervisor).
@@ -30,9 +29,13 @@ init([]) ->
                        {widgy_counter_sup, start_link, []},
                        permanent, 5000, supervisor, [widgy_counter_sup]},
 
-    WidgyWebsocketsServer = {widgy_server,
-                             {widgy_server, start_link, [Port]},
-                              permanent, 5000, worker, [widgy_server]},
+    WidgyDashboardSup = {widgy_dashboard_sup,
+                         {widgy_dashboard_sup, start_link, []},
+                         permanent, 5000, supervisor, [widgy_dashboard_sup]},
+
+    WidgyServer = {widgy_server,
+                   {widgy_server, start_link, [Port]},
+                   permanent, 5000, worker, [widgy_server]},
 
     WidgySubscriptionsHandler = {widgy_subscriptions_handler,
                              {widgy_subscriptions_handler, start_link, []},
@@ -47,11 +50,13 @@ init([]) ->
 
     {ok, { {one_for_one, 5, 10},
            [WidgyCounterSup,
-            WidgyWebsocketsServer,
-            WidgySubscriptionsHandler,
-            WidgyDataGatherer,
-            TimeServer,
-            TemperatureServer]
+            WidgyDashboardSup,
+            WidgyServer
+            %%WidgySubscriptionsHandler,
+            %%WidgyDataGatherer,
+            %%TimeServer,
+            %%TemperatureServer
+           ]
          }
     }.
 
