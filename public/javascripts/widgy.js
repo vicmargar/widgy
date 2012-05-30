@@ -49,5 +49,7 @@ function start(ws){
     //ws.send("subscribe:time");
     //ws.send("subscribe:temperature");
 
-    ws.send("subscribe:dcb48187-4270-4533-9b80-1cc8044fe597");
+    //ws.send("subscribe:dcb48187-4270-4533-9b80-1cc8044fe597");
+
+    ws.send("subscribe"); // In the future it will be able to subscribe to different dashboards
 }

@@ -3,7 +3,7 @@
 -behaviour(supervisor).
 
 -export([start_link/0]).
--export([create_dashboard/1]).
+-export([create_dashboard/1, create_dashboard/2]).
 
 -export([init/1]).
 
@@ -19,5 +19,8 @@ init([]) ->
 
 create_dashboard(FrequencyUpdate) ->
     Guid = uuid:new(),
-    {ok, Pid} = supervisor:start_child(?MODULE, [Guid, FrequencyUpdate]),
-    {Guid, Pid}.
+    create_dashboard(Guid, FrequencyUpdate).
+
+create_dashboard(Id, FrequencyUpdate) ->
+    {ok, Pid} = supervisor:start_child(?MODULE, [Id, FrequencyUpdate]),
+    {Id, Pid}.

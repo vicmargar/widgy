@@ -99,6 +99,8 @@ websocket_init(_Any, Req, []) ->
 
 websocket_handle({text, Data}, Req, State) ->
     case string:tokens(binary_to_list(Data), ":") of
+        ["subscribe"] ->
+            widgy:subscribe_to_dashboard(self(), default);
         ["subscribe", DashboardId] ->
             widgy:subscribe_to_dashboard(self(), DashboardId);
         Command ->

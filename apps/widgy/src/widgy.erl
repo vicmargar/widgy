@@ -5,10 +5,16 @@
 -compile(export_all).
 
 %% Create a dashboard
+
+
 create_dashboard(Frequency) ->
-    {Guid, Pid} = widgy_dashboard_sup:create_dashboard(Frequency),
-    ets:insert(?DASHBOARDS_TABLE, {Guid, Pid}),
-    Guid.
+    {Id, Pid} = widgy_dashboard_sup:create_dashboard(Frequency),
+    ets:insert(?DASHBOARDS_TABLE, {Id, Pid}),
+    Id.
+create_dashboard(Name, Frequency) ->
+    {Id, Pid} = widgy_dashboard_sup:create_dashboard(Name, Frequency),
+    ets:insert(?DASHBOARDS_TABLE, {Id, Pid}),
+    Id.
 
 start_counter() ->
     {Guid, Pid} = widgy_counter_sup:start_counter(),
@@ -21,11 +27,14 @@ add_widget_to_dashboard(WidgetId, DashboardId) ->
 subscribe_to_dashboard(Client, DashboardId) ->
     widgy_dashboard:add_client(Client, DashboardId).
 
-get_widget_state(WidgetId) when is_list(WidgetId) ->
-    WidgetPid = get_widget_pid(WidgetId),
-    get_widget_state(WidgetPid);
-get_widget_state(WidgetPid) when is_pid(WidgetPid) ->
-    gen_server:call(WidgetPid, get_state).
+get_widget_state(WidgetId) ->
+    {ok, WidgetState} = redis_conn:get(WidgetId),
+    io:format("Getting state for ~p ~p~n", [WidgetId, WidgetState]),
+    WidgetState.
+%     WidgetPid = get_widget_pid(WidgetId),
+%     get_widget_state(WidgetPid);
+% get_widget_state(WidgetPid) when is_pid(WidgetPid) ->
+%     gen_server:call(WidgetPid, get_state).
 
 get_dashboard_state(DashboardId) when is_list(DashboardId) ->
     DashboardPid = get_dashboard_pid(DashboardId),

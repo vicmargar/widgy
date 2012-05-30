@@ -31,9 +31,9 @@ handle_call(get_state, _From, State) ->
     {reply, DashboardState, State};
 
 handle_call({add_widget, WidgetId}, _From, State) ->
-    WidgetPid = widgy:get_widget_pid(WidgetId),
+    %%WidgetPid = widgy:get_widget_pid(WidgetId),
     Widgets = State#state.widgets,
-    {reply, ok, State#state{widgets=[{WidgetId, WidgetPid} | Widgets]}};
+    {reply, ok, State#state{widgets=[WidgetId | Widgets]}};
 
 handle_call({add_client, ClientPid}, _From, State) ->
     Clients = State#state.clients,
@@ -50,7 +50,7 @@ handle_info(send_updates, State) ->
     Clients = State#state.clients,
     Widgets = State#state.widgets,
 
-    io:format("Notifying clients: ~p of dashboard update~n", [Clients]),
+    io:format("Notifying clients: ~p of dashboard update, widgets: ~p~n", [Clients, Widgets]),
 
     DashboardState = get_state(Widgets),
 
@@ -71,8 +71,8 @@ code_change(_OldVsn, State, _Extra) ->
 
 
 get_state(Widgets) ->
-    DashboardState = lists:map(fun({Id, Pid}) ->
-                                       {Id, {struct, widgy:get_widget_state(Pid)}}
+    DashboardState = lists:map(fun(Id) ->
+                                       {Id, widgy:get_widget_state(Id)}
                                end, Widgets),
     DashboardState.
 

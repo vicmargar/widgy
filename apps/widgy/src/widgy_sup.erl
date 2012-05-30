@@ -25,9 +25,13 @@ start_link() ->
 init([]) ->
     {ok, Port} = application:get_env(widgy, websockets_port),
 
-    WidgyCounterSup = {widgy_counter_sup,
-                       {widgy_counter_sup, start_link, []},
-                       permanent, 5000, supervisor, [widgy_counter_sup]},
+    WidgyRedisSup = {widgy_redis_sup,
+                       {widgy_redis_sup, start_link, []},
+                       permanent, 5000, supervisor, [widgy_redis_sup]},
+
+    % WidgyCounterSup = {widgy_counter_sup,
+    %                    {widgy_counter_sup, start_link, []},
+    %                    permanent, 5000, supervisor, [widgy_counter_sup]},
 
     WidgyDashboardSup = {widgy_dashboard_sup,
                          {widgy_dashboard_sup, start_link, []},
@@ -37,21 +41,22 @@ init([]) ->
                    {widgy_server, start_link, [Port]},
                    permanent, 5000, worker, [widgy_server]},
 
-    WidgySubscriptionsHandler = {widgy_subscriptions_handler,
-                             {widgy_subscriptions_handler, start_link, []},
-                             permanent, 5000, worker, [widgy_subscriptions_handler]},
+    % WidgySubscriptionsHandler = {widgy_subscriptions_handler,
+    %                          {widgy_subscriptions_handler, start_link, []},
+    %                          permanent, 5000, worker, [widgy_subscriptions_handler]},
 
-    WidgyDataGatherer = {widgy_data_gatherer,
-                             {widgy_data_gatherer, start_link, []},
-                             permanent, 5000, worker, [widgy_data_gatherer]},
+    % WidgyDataGatherer = {widgy_data_gatherer,
+    %                          {widgy_data_gatherer, start_link, []},
+    %                          permanent, 5000, worker, [widgy_data_gatherer]},
 
-    TimeServer = ?WIDGET(time, 1000),
-    TemperatureServer = ?WIDGET(temperature, 60000),
+    % TimeServer = ?WIDGET(time, 1000),
+    % TemperatureServer = ?WIDGET(temperature, 60000),
 
     {ok, { {one_for_one, 5, 10},
-           [WidgyCounterSup,
-            WidgyDashboardSup,
-            WidgyServer
+           [WidgyRedisSup,
+            WidgyServer,
+            WidgyDashboardSup
+            % WidgyCounterSup,
             %%WidgySubscriptionsHandler,
             %%WidgyDataGatherer,
             %%TimeServer,
