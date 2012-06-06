@@ -3,3 +3,7 @@ make start_nginx
 make console
 
 http://localhost:8080
+
+
+
+redis-cli set "widgy::counter::1" "{\"widget\":\"counter\",\"count\":14,\"widget_id\":\"counter::1\"}"
