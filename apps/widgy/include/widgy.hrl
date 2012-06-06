@@ -1,4 +1,4 @@
--define(WIDGETS, [time, temperature]).
+-define(WIDGETS, [time, temperature, counter]).
 
 -define(COUNTERS_TABLE, counters_table).
 

@@ -1,21 +1,23 @@
 function process_message(JSONMessage){
     message = JSON.parse(JSONMessage);
-    widget = widgets[message.widget];
-    if (widget != undefined) {
-        widget.set(message);
-    }
+    message_widgets = message["widgets"];
+
+    for (var i in message_widgets){
+        var message = message_widgets[i];
+        var widget = JSON.parse(message);
+        var widget_type = widget["widget"];
+
+        w = widgets[widget_type];
+        w.set(widget);
+    };
 }
 
 function ready(){
-    time = new Time();
-    window.TimeView = new TimeView({model: time});
-
-    temperature = new Temperature();
-    window.TemperatureView = new TemperatureView({model: temperature});
+    counter = new Counter();
+    window.CounterView = new CounterView({model: counter});
 
     widgets = new Object();
-    widgets["time"] = time;
-    widgets["temperature"] = temperature;
+    widgets["counter"] = counter;
 
     if ("WebSocket" in window) {
         // browser supports websockets
@@ -46,10 +48,5 @@ function ready(){
 }
 
 function start(ws){
-    //ws.send("subscribe:time");
-    //ws.send("subscribe:temperature");
-
-    //ws.send("subscribe:dcb48187-4270-4533-9b80-1cc8044fe597");
-
     ws.send("subscribe"); // In the future it will be able to subscribe to different dashboards
 }

@@ -52,7 +52,11 @@ handle_info(send_updates, State) ->
 
     io:format("Notifying clients: ~p of dashboard update, widgets: ~p~n", [Clients, Widgets]),
 
-    DashboardState = get_state(Widgets),
+    WidgetState = get_state(Widgets),
+
+    io:format("~p~n", [WidgetState]),
+
+    DashboardState = [{"widgets", WidgetState}],
 
     lists:foreach(fun(Client) ->
                           widgy_handler:send(Client, DashboardState)
@@ -72,7 +76,7 @@ code_change(_OldVsn, State, _Extra) ->
 
 get_state(Widgets) ->
     DashboardState = lists:map(fun(Id) ->
-                                       {Id, widgy:get_widget_state(Id)}
+                                       widgy:get_widget_state(Id)
                                end, Widgets),
     DashboardState.
 
